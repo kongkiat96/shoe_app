@@ -1,6 +1,6 @@
 FROM php:8.4-fpm
 
-# Install dependencies
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
     libpng-dev \
@@ -9,7 +9,15 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     zip unzip git curl libzip-dev \
-    && docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl
+    ca-certificates gnupg
+
+# Install PHP extensions
+RUN docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl
+
+# Install Node.js (v20) + npm
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y nodejs && \
+    npm install -g npm
 
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
