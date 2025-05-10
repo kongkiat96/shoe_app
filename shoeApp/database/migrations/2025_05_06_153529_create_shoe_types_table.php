@@ -15,7 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->timestamps();
+            $table->string('status')->default('active');
+            $table->integer('deleted')->default(0);
+            $table->timestamp('created_at')->useCurrent();
+            $table->string('created_user')->nullable();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
+            $table->string('updated_user')->nullable();
         });
     }
 

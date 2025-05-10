@@ -1,0 +1,32 @@
+{
+    "data": [
+        {
+            "id": 1,
+            "statusName": "กำลังดำเนินงาน",
+            "statusUse": "3",
+            "status": "0",
+            "flagType": "Complete"
+        },
+        {
+            "id": 2,
+            "statusName": "กำลังดำเนินงาน2",
+            "statusUse": "2",
+            "status": "0",
+            "flagType": "Waiting"
+        },
+        {
+            "id": 3,
+            "statusName": "กำลังดำเนินงาน3",
+            "statusUse": "1",
+            "status": "0",
+            "flagType": "Close"
+        },
+        {
+            "id": 4,
+            "statusName": "กำลังดำเนินงาน4",
+            "statusUse": "3",
+            "status": "1",
+            "flagType": "Other"
+        }
+    ]
+}

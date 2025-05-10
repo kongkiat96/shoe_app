@@ -1,36 +1,81 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+{{-- <html lang="en" class="light-style" dir="ltr" data-theme="theme-default" data-assets-path="assets/" data-template="horizontal-menu-template"> --}}
+<html lang="en" class="light-style" dir="ltr" data-theme="theme-default" data-assets-path="{{ url('assets') }}/"
+    data-template="horizontal-menu-template">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    {{-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> --}}
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <title>{{ $urlName ?? '' }}</title>
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    @include('layouts.inc-stylesheet')
+    {{-- @yield('stylesheets') --}}
+    <style>
+        .svg-top-right svg {
+            width: 100%;  /* ขนาดจะเป็น 50% ของความกว้างของ container */
+            height: 100%; /* ความสูงจะคำนวณจาก aspect ratio */
+        }
+        .svg-profile svg {
+            width: 40%;  /* ขนาดจะเป็น 50% ของความกว้างของ container */
+            height: 40%; /* ความสูงจะคำนวณจาก aspect ratio */
+            margin-bottom: 5%;
+        }
+    </style>
+</head>
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-            @include('layouts.navigation')
+<body>
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
+        <div class="layout-container">
 
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white dark:bg-gray-800 shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
+            <nav class="layout-navbar navbar navbar-expand-xl align-items-center bg-navbar-theme" id="layout-navbar">
+                @include('layouts.inc-top-menu')
+            </nav>
+
+            <!-- Layout container -->
+            <div class="layout-page">
+                <!-- Content wrapper -->
+                <div class="content-wrapper">
+
+                    <!-- Menu -->
+                    @include('layouts.inc-menu')
+                    <!-- /Menu -->
+
+                    <div class="container-fluid flex-grow-1 container-p-y">
+                        <div class="container-xxl">
+                            @yield('content')
+                        </div>
+                        {{-- container-fluid --}}
                     </div>
-                </header>
-            @endisset
-
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
+                </div>
+            </div>
         </div>
-    </body>
+    </div>
+    <!-- Footer -->
+    <footer class="content-footer footer bg-footer-theme">
+        <div class="container-fluid d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
+            <div class="mb-2 mb-md-0">
+                © 2025 -
+                <script>
+                    document.write(new Date().getFullYear());
+                </script>
+                ,
+                <a href="#" target="_blank" class="footer-link fw-bolder">{{ config('aboutApp.name') }}</a>
+            </div>
+            {{-- <div>
+                <a href="https://www.servicesystemit.com/" class="footer-link me-4" target="_blank">License</a>
+
+                <a href="#" class="footer-link me-4" onclick="popup()">Documentation</a>
+
+                <a href="#" class="footer-link d-none d-sm-inline-block" onclick="popup()">Support</a>
+            </div> --}}
+        </div>
+    </footer>
+    <!-- / Footer -->
+    @include('layouts.inc-script')
+    @yield('script')
+</body>
 </html>
