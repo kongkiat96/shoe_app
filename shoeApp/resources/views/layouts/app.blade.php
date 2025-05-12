@@ -53,13 +53,6 @@
                 ,
                 <a href="#" target="_blank" class="footer-link fw-bolder">{{ config('aboutApp.name') }}</a>
             </div>
-            {{-- <div>
-                <a href="https://www.servicesystemit.com/" class="footer-link me-4" target="_blank">License</a>
-
-                <a href="#" class="footer-link me-4" onclick="popup()">Documentation</a>
-
-                <a href="#" class="footer-link d-none d-sm-inline-block" onclick="popup()">Support</a>
-            </div> --}}
         </div>
     </footer>
     <!-- / Footer -->
