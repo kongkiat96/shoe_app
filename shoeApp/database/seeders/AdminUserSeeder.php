@@ -19,6 +19,7 @@ class AdminUserSeeder extends Seeder
         ], [
             'name' => 'Admin User',
             'password' => Hash::make('ThisIs@S3cret'),
+            'email_verified_at' => now(),
             'role' => 'admin',
         ]);
     }

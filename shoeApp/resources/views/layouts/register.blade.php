@@ -9,7 +9,7 @@
     {{-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> --}}
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
-    <title>{{ $urlName ?? '' }}</title>
+    <title>{{ config('aboutApp.name') }}</title>
 
     @include('layouts.inc-stylesheet')
 </head>
@@ -20,23 +20,42 @@
         <div class="layout-container">
 
             <nav class="layout-navbar navbar navbar-expand-xl align-items-center bg-navbar-theme" id="layout-navbar">
-                @include('layouts.inc-top-menu')
+                {{-- <div class="container-fluid"> --}}
+                <div class="container-xxl">
+                    <div class="navbar-brand app-brand demo d-none d-xl-flex py-0 me-4">
+                        <a href="{{ url('/') }}" class="app-brand-link gap-2">
+                            <span class="app-brand-logo demo">
+                                <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
+                            </span>
+                            <span class="demo menu-text fw-bolder">{{ config('aboutApp.name') }}</span>
+                        </a>
+
+                        <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-xl-none">
+                            <i class="bx bx-chevron-left bx-sm align-middle"></i>
+                        </a>
+                    </div>
+
+                    <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
+                        <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+                            <i class="bx bx-menu bx-sm"></i>
+                        </a>
+                    </div>
+
+
+
+                </div>
+
             </nav>
 
-            <!-- Layout container -->
             <div class="layout-page">
-                <!-- Content wrapper -->
+
                 <div class="content-wrapper">
 
-                    <!-- Menu -->
-                    @include('layouts.inc-menu')
-                    <!-- /Menu -->
 
                     <div class="container-fluid flex-grow-1 container-p-y">
                         <div class="container-xxl">
                             @yield('content')
                         </div>
-                        {{-- container-fluid --}}
                     </div>
                 </div>
             </div>
@@ -66,4 +85,5 @@
     @include('layouts.inc-script')
     @yield('script')
 </body>
+
 </html>

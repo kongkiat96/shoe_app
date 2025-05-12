@@ -3,48 +3,68 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Master\MasterModel;
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Validator;
 
 class RegisteredUserController extends Controller
 {
+    private $functionMaster;
+
+    public function __construct()
+    {
+        $this->functionMaster = new MasterModel();
+    }
     /**
      * Display the registration view.
      */
     public function create(): View
     {
-        return view('auth.register');
+        $masterShoeType = $this->functionMaster->getDataShoeType();
+        $dataShoe = $this->functionMaster->getDataShoe();
+        return view('auth.register', [
+            'masterShoeType' => $masterShoeType,
+            'dataShoes' => $dataShoe
+        ]);
     }
 
-    /**
-     * Handle an incoming registration request.
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
-    public function store(Request $request): RedirectResponse
+    public function saveRegister(Request $request)
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+        $setReqInput = $request->all();
+
+        if (!empty($setReqInput['lastName'])) {
+            $setReqInput['name'] = $setReqInput['fullname'] . ' ' . $setReqInput['lastName'];
+        } else {
+            $setReqInput['name'] = $setReqInput['fullname'];
+        }
+
+        $setReqInput['password'] = $setReqInput['newPassword'];
+        $setReqInput['email'] = $setReqInput['username'];
+
+        $exists = User::where('email', $setReqInput['email'])->first();
+        if ($exists) {
+            return response()->json(['status' => 23000, 'message' => 'Data Duplicate']);
+        }
 
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'name' => $setReqInput['name'],
+            'email' => $setReqInput['email'],
+            'password' => Hash::make($setReqInput['password']),
+            'role' => 'user',
         ]);
 
-        event(new Registered($user));
+        if (!empty($setReqInput['shoeType']) && is_array($setReqInput['shoeType'])) {
+            $user->shoeTypes()->attach($setReqInput['shoeType']);
+        }
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        $user->sendEmailVerificationNotification();
+
+        return response()->json(['status' => 200, 'message' => 'Create User Success']);
     }
 }

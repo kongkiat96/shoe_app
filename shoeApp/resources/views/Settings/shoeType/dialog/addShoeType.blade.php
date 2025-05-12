@@ -10,13 +10,13 @@
                 <div class="row">
 
                     <div class="col-md-12 mb-3">
-                        <label class="form-label-md mb-2" for="name">ประเภทรองเท้า</label>
+                        <label class="form-label-md mb-2" for="name">ประเภทรองเท้า <span class="text-danger">*</span></label>
                         <input type="text" id="name" class="form-control" name="name"
                             autocomplete="off" value=""/>
                     </div>
 
                     <div class="col-md-12 mb-3">
-                        <label class="form-label-md mb-2" for="description">รายละเอียดประเภทรองเท้า</label>
+                        <label class="form-label-md mb-2" for="description">รายละเอียดประเภทรองเท้า <span class="text-danger">*</span></label>
                         <textarea id="description" name="description" rows="3" class="form-control" autocomplete="off"></textarea>
                     </div>
                 </div>

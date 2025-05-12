@@ -9,10 +9,11 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     zip unzip git curl libzip-dev \
-    ca-certificates gnupg
+    ca-certificates gnupg \
+    libgd-dev  # Add GD library
 
 # Install PHP extensions
-RUN docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl
+RUN docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl gd  # Add gd extension
 
 # Install Node.js (v20) + npm
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \

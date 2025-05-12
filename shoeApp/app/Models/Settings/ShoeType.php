@@ -3,10 +3,12 @@
 namespace App\Models\Settings;
 
 use App\Models\Master\MasterModel;
+use App\Models\User;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class ShoeType extends Model
@@ -46,8 +48,6 @@ class ShoeType extends Model
             foreach ($sql as $key => $value) {
                 $newArr[] = [
                     'id' =>  encrypt($value->id),
-                    // 'encrypted_id' => encrypt($value->id),
-                    // 'id' =>  $value->id,
                     'name' => $value->name,
                     'description' => $value->description,
                     'status'    => $value->status,
@@ -65,8 +65,6 @@ class ShoeType extends Model
                 "recordsFiltered" => $dataCount,
                 "data" => $newArr,
             ];
-
-            return $returnData;
         } catch (Exception $e) {
             Log::error('status Code : ' . $e->getCode() . ' Message : ' . $e->getMessage());
             $returnData = [
@@ -83,13 +81,14 @@ class ShoeType extends Model
 
     public function editShoeType($params, $shoeTypeID)
     {
+        DB::beginTransaction();
         try {
             // dd($params);
             $decryptID = decrypt($shoeTypeID);
             $shoeType = ShoeType::find($decryptID);
             if ($shoeType) {
                 $params['updated_at'] = Carbon::now();
-                $params['updated_user'] = Auth::user()->id;
+                $params['updated_user'] = Auth::id();
                 $shoeType->update($params);
                 $returnData = [
                     "status" => 200,
@@ -101,7 +100,9 @@ class ShoeType extends Model
                     "message" => 'Data Not Found',
                 ];
             }
+            DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error('status Code : ' . $e->getCode() . ' Message : ' . $e->getMessage());
             $returnData = [
                 "status" => $e->getCode(),
@@ -120,7 +121,7 @@ class ShoeType extends Model
             $shoeType = ShoeType::find($decryptID);
             if ($shoeType) {
                 $params['updated_at'] = Carbon::now();
-                $params['updated_user'] = Auth::user()->id;
+                $params['updated_user'] = Auth::id();
                 unset($params['id']);
                 $shoeType->update([
                     'status' => $params['status'],
@@ -160,7 +161,7 @@ class ShoeType extends Model
                     'deleted' => 1,
                     'status' => 'inactive',
                     'updated_at' => Carbon::now(),
-                    'updated_user' => Auth::user()->id
+                    'updated_user' => Auth::id()
                 ]);
                 $returnData = [
                     "status" => 200,
@@ -187,9 +188,9 @@ class ShoeType extends Model
     {
         try {
             $params['created_at'] = Carbon::now();
-            $params['created_user'] = Auth::user()->id;
+            $params['created_user'] = Auth::id();
             $params['updated_at'] = Carbon::now();
-            $params['updated_user'] = Auth::user()->id;
+            $params['updated_user'] = Auth::id();
             $shoeType = ShoeType::create($params);
             $returnData = [
                 "status" => 200,
@@ -204,5 +205,10 @@ class ShoeType extends Model
         } finally {
             return $returnData;
         }
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_shoe_type');
     }
 }

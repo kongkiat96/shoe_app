@@ -14,7 +14,7 @@ Route::get('/', function () {
 //     // Route::get('home', [HomeController::class, 'index']);
 // })->middleware(['auth', 'verified'])->name('home');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('home', [HomeController::class, 'index']);
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -31,7 +31,24 @@ Route::middleware('auth')->group(function () {
             Route::get('/create-shoe-type', [ShoeController::class, 'createShoeType']);
             Route::post('/save-shoe-type', [ShoeController::class, 'saveShoeType']);
         });
+
+        Route::prefix('/shoe-brand')->group(function () {
+            Route::get('/add-shoe-brand', [ShoeController::class, 'shoeBrand'])->name('shoeBrand');
+            Route::get('/create-shoe', [ShoeController::class, 'createShoe']);
+            Route::post('/save-shoe', [ShoeController::class, 'saveShoe']);
+            Route::post('/get-data-shoe-brand', [ShoeController::class, 'getDataShoeBrand']);
+            Route::get('/show-shoe/{shoeID}', [ShoeController::class, 'showShoe']);
+            Route::post('/edit-shoe/{shoeID}', [ShoeController::class, 'editShoe']);
+            Route::post('/shoe-update-status', [ShoeController::class, 'shoeUpdateStatus']);
+            Route::post('/delete-shoe/{shoeID}', [ShoeController::class, 'shoeDelete']);
+        });
     });
+    Route::post('/favourite/add', [ShoeController::class, 'addFavourite'])->name('favourite.add');
+    Route::get('/favourite/list', [ShoeController::class, 'getFavourites'])->name('favourite.list');
+    Route::post('/favourite/remove', [ShoeController::class, 'removeFavourite']);
+    Route::get('/favourite/export/{type}', [ShoeController::class, 'exportFavourites']);
+
+
 });
 
 require __DIR__ . '/auth.php';

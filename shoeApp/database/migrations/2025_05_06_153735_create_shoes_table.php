@@ -14,10 +14,15 @@ return new class extends Migration
         Schema::create('shoes', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId('shoe_type_id')->constrained()->onDelete('cascade');
+            $table->integer('shoe_type_id')->nullable();
             $table->string('image')->nullable();
             $table->text('description')->nullable();
-            $table->timestamps();
+            $table->string('status')->default('active');
+            $table->integer('deleted')->default(0);
+            $table->timestamp('created_at')->useCurrent();
+            $table->string('created_user')->nullable();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
+            $table->string('updated_user')->nullable();
         });
     }
 
